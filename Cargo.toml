@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "loader",
+    "safe-dll",
+    "dodgy-dll",
+]
+resolver = "2"
