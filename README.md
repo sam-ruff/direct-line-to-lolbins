@@ -3,8 +3,7 @@
 An educational example demonstrating DLL search order hijacking on Windows.
 
 The loader checks for `greeting.dll` in this order:
-- `%USERPROFILE%\greeting.dll` (user-writable, most easily hijacked)
-- `%USERPROFILE%\GreetingApp\greeting.dll` (user-writable app directory)
+- `%USERPROFILE%\GreetingApp\greeting.dll` (user-writable, hijackable)
 - `C:\Program Files\GreetingApp\greeting.dll` (admin-protected, safe)
 
 ## Building
@@ -58,22 +57,7 @@ Loading DLL from safe location: C:\Program Files\GreetingApp\greeting.dll
 hello from a safe binary
 ```
 
-### Hijack scenario (user profile root)
-
-Place the dodgy DLL (built separately from safe-dll) directly in the user profile:
-
-```powershell
-cp dodgy-greeting.dll $env:USERPROFILE\greeting.dll
-.\loader.exe
-```
-
-Output:
-```
-Loading DLL from user profile: C:\Users\<username>\greeting.dll
-Hello, direct line?
-```
-
-### Hijack scenario (user profile app directory)
+### Hijack scenario
 
 Place the dodgy DLL in the user's app directory:
 
@@ -92,6 +76,5 @@ Hello, direct line?
 ### Cleanup
 
 ```powershell
-del $env:USERPROFILE\greeting.dll
 rmdir $env:USERPROFILE\GreetingApp -Recurse
 ```

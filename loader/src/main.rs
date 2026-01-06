@@ -4,12 +4,6 @@ use std::path::PathBuf;
 
 type GreetFn = extern "C" fn();
 
-fn get_user_profile_dll_path() -> Option<PathBuf> {
-    env::var("USERPROFILE")
-        .ok()
-        .map(|profile| PathBuf::from(profile).join("greeting.dll"))
-}
-
 fn get_user_profile_app_dll_path() -> Option<PathBuf> {
     env::var("USERPROFILE")
         .ok()
@@ -55,15 +49,8 @@ fn try_load_and_greet(path: &PathBuf, description: &str) -> bool {
 
 fn main() {
     // Search order demonstrates DLL hijack vulnerability:
-    // 1. User profile root (most easily hijacked)
-    // 2. User profile app directory (user-writable)
-    // 3. Program Files (admin-protected, safe)
-
-    if let Some(path) = get_user_profile_dll_path()
-        && try_load_and_greet(&path, "user profile")
-    {
-        return;
-    }
+    // 1. User profile app directory (user-writable)
+    // 2. Program Files (admin-protected, safe)
 
     if let Some(path) = get_user_profile_app_dll_path()
         && try_load_and_greet(&path, "user profile app directory")
